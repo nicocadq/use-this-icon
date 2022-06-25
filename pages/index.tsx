@@ -6,6 +6,7 @@ import { Button, Text, useTheme} from "@nextui-org/react";
 import { useTheme as useNextTheme } from 'next-themes'
 
 import Logo from "assets/logo.svg";
+import { copyToClipboard } from "utils/clipboard";
 import { getRandomIcon } from "utils/get-random-icon";
 import { persistEmoji, getStoredEmoji } from "utils/storage";
 
@@ -21,6 +22,10 @@ const Home: NextPage = () => {
       const icon = getRandomIcon();
       setCurrentIcon(icon);
       persistEmoji(icon);
+
+      copyToClipboard(icon);
+    } else {
+      copyToClipboard(currentIcon);
     }
   }, [currentIcon]);
 
@@ -60,14 +65,20 @@ const Home: NextPage = () => {
             </Text>
             <Text size="1.25rem">What are you waiting for?</Text>
           </div>
+          {currentIcon ? (
+          <Button bordered color="primary" auto css={{ padding: "1rem" }}>
+            {currentIcon}
+          </Button>
+        ) : (
           <Button
             css={{ background: "#FF2063" }}
             size="lg"
             rounded
             onPress={onGenerateClick}
           >
-            {currentIcon ? currentIcon : "Generate icon"}
+            Generate icon
           </Button>
+        )}
        </div>
         <footer>
         <Text size="1.25rem" weight="medium">
