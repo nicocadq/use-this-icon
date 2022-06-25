@@ -1,5 +1,4 @@
 import React from "react";
-import {} from "next";
 import Document, {
   DocumentContext,
   Head,

@@ -4,11 +4,11 @@ import Head from "next/head";
 import Image from "next/image";
 import { Button, Text } from "@nextui-org/react";
 
-import Logo from "../assets/logo.svg";
-import { getRandomIcon } from "../utils/get-random-icon";
-import { persistEmoji, getStoredEmoji } from "../utils/storage";
+import Logo from "assets/logo.svg";
+import { getRandomIcon } from "utils/get-random-icon";
+import { persistEmoji, getStoredEmoji } from "utils/storage";
 
-import styles from "../styles/Home.module.css";
+import styles from "styles/Home.module.css";
 
 const Home: NextPage = () => {
   const [currentIcon, setCurrentIcon] = useState<string>("");
