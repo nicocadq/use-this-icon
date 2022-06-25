@@ -1,9 +1,12 @@
+import { useCallback, useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { Button, Text } from "@nextui-org/react";
 
-import Logo from "./assets/logo.svg";
+import Logo from "../assets/logo.svg";
+import { getRandomIcon } from "../utils/get-random-icon";
+import { persistEmoji, getStoredEmoji } from "../utils/storage";
 
 import styles from "../styles/Home.module.css";
 import { useTheme as useNextTheme } from 'next-themes'
@@ -12,6 +15,23 @@ import { useTheme } from '@nextui-org/react'
 const Home: NextPage = () => {
   const { setTheme } = useNextTheme();
   const { isDark } = useTheme();
+  const [currentIcon, setCurrentIcon] = useState<string>("");
+
+  const onGenerateClick = useCallback(() => {
+    if (!currentIcon) {
+      const icon = getRandomIcon();
+      setCurrentIcon(icon);
+      persistEmoji(icon);
+    }
+  }, [currentIcon]);
+
+  useEffect(() => {
+    const persistedEmoji = getStoredEmoji();
+
+    if (persistedEmoji) {
+      setCurrentIcon(persistedEmoji);
+    }
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -40,8 +60,13 @@ const Home: NextPage = () => {
           </Text>
           <Text size="1.25rem">What are you waiting for?</Text>
         </div>
-        <Button css={{ background: "#FF2063" }} size="lg" rounded>
-          Generate icon
+        <Button
+          css={{ background: "#FF2063" }}
+          size="lg"
+          rounded
+          onPress={onGenerateClick}
+        >
+          {currentIcon ? currentIcon : "Generate icon"}
         </Button>
       </main>
     </div>
