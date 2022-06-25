@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { Button, Text, useTheme} from "@nextui-org/react";
-import { useTheme as useNextTheme } from 'next-themes'
+import { Button, Text, useTheme } from "@nextui-org/react";
+import { useTheme as useNextTheme } from "next-themes";
 
 import Logo from "assets/logo.svg";
 import { copyToClipboard } from "utils/clipboard";
@@ -49,15 +49,27 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-          <div className={styles.header}>
-            {isDark ? 
-            <Text h3 css={{cursor: "pointer"}} onClick={()=>setTheme('light')}>🌕</Text>
-            : 
-            <Text h3 css={{cursor: "pointer"}} onClick={()=>setTheme('dark')}>🌑</Text> 
-          }
-          </div>
-       <div className={styles.body}>
-        <Image alt="Logo" src={Logo} />
+        <div className={styles.header}>
+          {isDark ? (
+            <Text
+              h3
+              css={{ cursor: "pointer" }}
+              onClick={() => setTheme("light")}
+            >
+              🌕
+            </Text>
+          ) : (
+            <Text
+              h3
+              css={{ cursor: "pointer" }}
+              onClick={() => setTheme("dark")}
+            >
+              🌑
+            </Text>
+          )}
+        </div>
+        <div className={styles.body}>
+          <Image alt="Logo" src={Logo} />
           <Text h2>UseThisIcon.com</Text>
           <div className={styles["info-container"]}>
             <Text size="1.25rem" weight="medium">
@@ -65,23 +77,17 @@ const Home: NextPage = () => {
             </Text>
             <Text size="1.25rem">What are you waiting for?</Text>
           </div>
-          {currentIcon ? (
-          <Button bordered color="primary" auto css={{ padding: "1rem" }}>
-            {currentIcon}
-          </Button>
-        ) : (
           <Button
             css={{ background: "#FF2063" }}
             size="lg"
             rounded
             onPress={onGenerateClick}
           >
-            Generate icon
+            {currentIcon ? currentIcon : "Generate icon"}
           </Button>
-        )}
-       </div>
+        </div>
         <footer>
-        <Text size="1.25rem" weight="medium">
+          <Text size="1.25rem" weight="medium">
             Copyright © 2022 Painted Birds
           </Text>
         </footer>
