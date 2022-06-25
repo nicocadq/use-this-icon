@@ -6,6 +6,7 @@ import { Button, Text, useTheme} from "@nextui-org/react";
 import { useTheme as useNextTheme } from 'next-themes'
 
 import Logo from "assets/logo.svg";
+import { copyToClipboard } from "utils/clipboard";
 import { getRandomIcon } from "utils/get-random-icon";
 import { persistEmoji, getStoredEmoji } from "utils/storage";
 
@@ -21,6 +22,10 @@ const Home: NextPage = () => {
       const icon = getRandomIcon();
       setCurrentIcon(icon);
       persistEmoji(icon);
+
+      copyToClipboard(icon);
+    } else {
+      copyToClipboard(currentIcon);
     }
   }, [currentIcon]);
 
@@ -54,19 +59,25 @@ const Home: NextPage = () => {
         <Image alt="Logo" src={Logo} />
         <Text h2>UseThisIcon.com</Text>
         <div className={styles["info-container"]}>
-          <Text size="1.25rem" weight="medium">
-            A website that generate a radom icon per day!
+          <Text size="1.25rem" weight="medium" css={{ textAlign: "center" }}>
+            Generate an icon that you MUST to use at some point of the day
           </Text>
           <Text size="1.25rem">What are you waiting for?</Text>
         </div>
-        <Button
-          css={{ background: "#FF2063" }}
-          size="lg"
-          rounded
-          onPress={onGenerateClick}
-        >
-          {currentIcon ? currentIcon : "Generate icon"}
-        </Button>
+        {currentIcon ? (
+          <Button bordered color="primary" auto css={{ padding: "1rem" }}>
+            {currentIcon}
+          </Button>
+        ) : (
+          <Button
+            css={{ background: "#FF2063" }}
+            size="lg"
+            rounded
+            onPress={onGenerateClick}
+          >
+            Generate icon
+          </Button>
+        )}
       </main>
     </div>
   );
