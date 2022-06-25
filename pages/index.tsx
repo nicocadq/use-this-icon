@@ -6,8 +6,14 @@ import { Button, Text } from "@nextui-org/react";
 import Logo from "./assets/logo.svg";
 
 import styles from "../styles/Home.module.css";
+import { useState } from "react";
+import { useTheme as useNextTheme } from 'next-themes'
+import { useTheme } from '@nextui-org/react'
 
 const Home: NextPage = () => {
+  const { setTheme } = useNextTheme();
+  const { isDark } = useTheme();
+
   return (
     <div className={styles.container}>
       <Head>
@@ -20,6 +26,13 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
+        <div className={styles.header}>
+          {isDark ? 
+          <Text h3 css={{cursor: "pointer"}} onClick={()=>setTheme('light')}>🌕</Text>
+          : 
+          <Text h3 css={{cursor: "pointer"}} onClick={()=>setTheme('dark')}>🌑</Text> 
+        }
+        </div>
         <Image alt="Logo" src={Logo} />
         <Text h2>UseThisIcon.com</Text>
         <div className={styles["info-container"]}>
