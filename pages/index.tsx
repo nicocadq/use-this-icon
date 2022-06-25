@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { Button, Text } from "@nextui-org/react";
+import { Button, Text, useTheme} from "@nextui-org/react";
+import { useTheme as useNextTheme } from 'next-themes'
 
 import Logo from "assets/logo.svg";
 import { getRandomIcon } from "utils/get-random-icon";
@@ -11,6 +12,8 @@ import { persistEmoji, getStoredEmoji } from "utils/storage";
 import styles from "styles/Home.module.css";
 
 const Home: NextPage = () => {
+  const { setTheme } = useNextTheme();
+  const { isDark } = useTheme();
   const [currentIcon, setCurrentIcon] = useState<string>("");
 
   const onGenerateClick = useCallback(() => {
@@ -41,6 +44,13 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
+        <div className={styles.header}>
+          {isDark ? 
+          <Text h3 css={{cursor: "pointer"}} onClick={()=>setTheme('light')}>🌕</Text>
+          : 
+          <Text h3 css={{cursor: "pointer"}} onClick={()=>setTheme('dark')}>🌑</Text> 
+        }
+        </div>
         <Image alt="Logo" src={Logo} />
         <Text h2>UseThisIcon.com</Text>
         <div className={styles["info-container"]}>
