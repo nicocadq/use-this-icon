@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 import { Button, Modal, Text, useTheme } from "@nextui-org/react";
 import { useTheme as useNextTheme } from "next-themes";
 
@@ -11,16 +12,15 @@ import { getRandomIcon } from "utils/get-random-icon";
 import { persistEmoji, getStoredEmoji } from "utils/storage";
 
 import styles from "styles/Home.module.css";
-import Link from "next/link";
 
 const Home: NextPage = () => {
   const { setTheme } = useNextTheme();
   const { isDark } = useTheme();
   const [currentIcon, setCurrentIcon] = useState<string>("");
-  const [visible, setVisible] = useState(false);
-  const closeHandler = () => {
-    setVisible(false);
-  };
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const onModalClose = useCallback(() => {
+    setIsModalVisible(false);
+  }, []);
 
   const onGenerateClick = useCallback(() => {
     if (!currentIcon) {
@@ -54,7 +54,10 @@ const Home: NextPage = () => {
       </Head>
       <main className={styles.main}>
         <div className={styles.header}>
-          <Text css={{ cursor: "pointer" }} onClick={() => setVisible(true)}>
+          <Text
+            css={{ cursor: "pointer" }}
+            onClick={() => setIsModalVisible(true)}
+          >
             Rules
           </Text>
           {isDark ? (
@@ -103,8 +106,8 @@ const Home: NextPage = () => {
         closeButton
         blur
         aria-labelledby="modal-title"
-        open={visible}
-        onClose={closeHandler}
+        open={isModalVisible}
+        onClose={onModalClose}
       >
         <Modal.Header>
           <Text id="modal-title" size={18}>
