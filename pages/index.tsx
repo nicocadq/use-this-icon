@@ -2,15 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { Button, Text } from "@nextui-org/react";
-
-import Logo from "../assets/logo.svg";
-import { getRandomIcon } from "../utils/get-random-icon";
-import { persistEmoji, getStoredEmoji } from "../utils/storage";
-
-import styles from "../styles/Home.module.css";
+import { Button, Text, useTheme} from "@nextui-org/react";
 import { useTheme as useNextTheme } from 'next-themes'
-import { useTheme } from '@nextui-org/react'
+
+import Logo from "assets/logo.svg";
+import { getRandomIcon } from "utils/get-random-icon";
+import { persistEmoji, getStoredEmoji } from "utils/storage";
+
+import styles from "styles/Home.module.css";
 
 const Home: NextPage = () => {
   const { setTheme } = useNextTheme();
