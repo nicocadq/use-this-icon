@@ -6,7 +6,6 @@ import { Button, Text } from "@nextui-org/react";
 import Logo from "./assets/logo.svg";
 
 import styles from "../styles/Home.module.css";
-import { useState } from "react";
 import { useTheme as useNextTheme } from 'next-themes'
 import { useTheme } from '@nextui-org/react'
 
