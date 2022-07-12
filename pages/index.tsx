@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button, Modal, Text, useTheme } from "@nextui-org/react";
 import { useTheme as useNextTheme } from "next-themes";
+import toast from "react-hot-toast";
 
 import Logo from "assets/logo.svg";
 import { copyToClipboard } from "utils/clipboard";
@@ -16,11 +17,17 @@ import styles from "styles/Home.module.css";
 const Home: NextPage = () => {
   const { setTheme } = useNextTheme();
   const { isDark } = useTheme();
-  const [currentIcon, setCurrentIcon] = useState<string>("");
+
+  const [currentIcon, setCurrentIcon] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const onModalClose = useCallback(() => {
-    setIsModalVisible(false);
+
+  const onModalClick = useCallback(() => {
+    setIsModalVisible((previousState) => !previousState);
   }, []);
+
+  const onThemeChange = useCallback(() => {
+    setTheme(isDark ? "light" : "dark");
+  }, [isDark, setTheme]);
 
   const onGenerateClick = useCallback(() => {
     if (!currentIcon) {
@@ -32,6 +39,8 @@ const Home: NextPage = () => {
     } else {
       copyToClipboard(currentIcon);
     }
+
+    toast.success("Copied to your clipboard");
   }, [currentIcon]);
 
   useEffect(() => {
@@ -43,7 +52,7 @@ const Home: NextPage = () => {
   }, []);
 
   return (
-    <div className={styles.container}>
+    <>
       <Head>
         <title>Use this Icon</title>
         <meta
@@ -53,39 +62,32 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <div className={styles.header}>
-          <Text
-            css={{ cursor: "pointer" }}
-            onClick={() => setIsModalVisible(true)}
+        <header className={styles.header}>
+          <Button
+            onClick={onModalClick}
+            light
+            size="sm"
+            css={{ minWidth: "3rem" }}
           >
             Rules
-          </Text>
-          {isDark ? (
-            <Text
-              h3
-              css={{ cursor: "pointer" }}
-              onClick={() => setTheme("light")}
-            >
-              🌕
-            </Text>
-          ) : (
-            <Text
-              h3
-              css={{ cursor: "pointer" }}
-              onClick={() => setTheme("dark")}
-            >
-              🌑
-            </Text>
-          )}
-        </div>
-        <div className={styles.body}>
+          </Button>
+          <Button
+            light
+            onClick={onThemeChange}
+            size="sm"
+            css={{ minWidth: "6rem" }}
+          >
+            {isDark ? "🌕" : "🌑"}
+          </Button>
+        </header>
+        <div className={styles.content}>
           <Image alt="Logo" src={Logo} />
           <Text h2>UseThisIcon.com</Text>
           <div className={styles["info-container"]}>
             <Text size="1.25rem" weight="medium">
-              A website that generate a radom icon per day!
+              Generate an icon that you MUST to use at some point of the day
             </Text>
-            <Text size="1.25rem">What are you waiting for?</Text>
+            <Text size="1rem">What are you waiting for?</Text>
           </div>
           <Button
             css={{ background: "#FF2063" }}
@@ -96,8 +98,8 @@ const Home: NextPage = () => {
             {currentIcon ? currentIcon : "Generate icon"}
           </Button>
         </div>
-        <footer>
-          <Text size="1.25rem" weight="medium" css={{ textAlign: "center" }}>
+        <footer className={styles.footer}>
+          <Text size="1rem" weight="medium">
             Copyright © 2022 Painted Birds
           </Text>
         </footer>
@@ -107,7 +109,7 @@ const Home: NextPage = () => {
         blur
         aria-labelledby="modal-title"
         open={isModalVisible}
-        onClose={onModalClose}
+        onClose={onModalClick}
       >
         <Modal.Header>
           <Text id="modal-title" size={18}>
@@ -128,9 +130,8 @@ const Home: NextPage = () => {
             </Link>
           </Text>
         </Modal.Body>
-        <Modal.Footer></Modal.Footer>
       </Modal>
-    </div>
+    </>
   );
 };
 
