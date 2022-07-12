@@ -2,8 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { Button, Text, useTheme} from "@nextui-org/react";
-import { useTheme as useNextTheme } from 'next-themes'
+import Link from "next/link";
+import { Button, Modal, Text, useTheme } from "@nextui-org/react";
+import { useTheme as useNextTheme } from "next-themes";
 
 import Logo from "assets/logo.svg";
 import { copyToClipboard } from "utils/clipboard";
@@ -16,6 +17,10 @@ const Home: NextPage = () => {
   const { setTheme } = useNextTheme();
   const { isDark } = useTheme();
   const [currentIcon, setCurrentIcon] = useState<string>("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const onModalClose = useCallback(() => {
+    setIsModalVisible(false);
+  }, []);
 
   const onGenerateClick = useCallback(() => {
     if (!currentIcon) {
@@ -47,17 +52,34 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <main className={styles.main}>
-          <div className={styles.header}>
-            {isDark ? 
-            <Text h3 css={{cursor: "pointer"}} onClick={()=>setTheme('light')}>🌕</Text>
-            : 
-            <Text h3 css={{cursor: "pointer"}} onClick={()=>setTheme('dark')}>🌑</Text> 
-          }
-          </div>
-       <div className={styles.body}>
-        <Image alt="Logo" src={Logo} />
+        <div className={styles.header}>
+          <Text
+            css={{ cursor: "pointer" }}
+            onClick={() => setIsModalVisible(true)}
+          >
+            Rules
+          </Text>
+          {isDark ? (
+            <Text
+              h3
+              css={{ cursor: "pointer" }}
+              onClick={() => setTheme("light")}
+            >
+              🌕
+            </Text>
+          ) : (
+            <Text
+              h3
+              css={{ cursor: "pointer" }}
+              onClick={() => setTheme("dark")}
+            >
+              🌑
+            </Text>
+          )}
+        </div>
+        <div className={styles.body}>
+          <Image alt="Logo" src={Logo} />
           <Text h2>UseThisIcon.com</Text>
           <div className={styles["info-container"]}>
             <Text size="1.25rem" weight="medium">
@@ -65,27 +87,49 @@ const Home: NextPage = () => {
             </Text>
             <Text size="1.25rem">What are you waiting for?</Text>
           </div>
-          {currentIcon ? (
-          <Button bordered color="primary" auto css={{ padding: "1rem" }}>
-            {currentIcon}
-          </Button>
-        ) : (
           <Button
             css={{ background: "#FF2063" }}
             size="lg"
             rounded
             onPress={onGenerateClick}
           >
-            Generate icon
+            {currentIcon ? currentIcon : "Generate icon"}
           </Button>
-        )}
-       </div>
+        </div>
         <footer>
-        <Text size="1.25rem" weight="medium">
+          <Text size="1.25rem" weight="medium" css={{ textAlign: "center" }}>
             Copyright © 2022 Painted Birds
           </Text>
         </footer>
       </main>
+      <Modal
+        closeButton
+        blur
+        aria-labelledby="modal-title"
+        open={isModalVisible}
+        onClose={onModalClose}
+      >
+        <Modal.Header>
+          <Text id="modal-title" size={18}>
+            Rules
+          </Text>
+        </Modal.Header>
+        <Modal.Body css={{ gap: 20 }}>
+          <Text span>🔆 Generate an Icon</Text>
+          <Text span>📣 Copy to the clipboard</Text>
+          <Text span>
+            🎲 Use the icon in any situation, like in a message, story or
+            wherever you want
+          </Text>
+          <Text span>
+            ❤️ Take an screenshot and share it with us at our instagram&nbsp;
+            <Link href="https://www.instagram.com/usethisicon/">
+              @UseThisIcon
+            </Link>
+          </Text>
+        </Modal.Body>
+        <Modal.Footer></Modal.Footer>
+      </Modal>
     </div>
   );
 };
