@@ -1,9 +1,14 @@
 const KEY = "emoji";
 
-export const persistEmoji = (emoji: string) => {
-  return localStorage.setItem(KEY, emoji);
+export interface Emoji {
+  icon: string;
+  date: Date;
+}
+
+export const persistEmoji = (emoji: Emoji) => {
+  return localStorage.setItem(KEY, JSON.stringify(emoji));
 };
 
-export const getStoredEmoji = (): string | null => {
-  return localStorage.getItem(KEY);
+export const getStoredEmoji = (): Emoji | null => {
+  return JSON.parse(localStorage.getItem(KEY) || "null");
 };

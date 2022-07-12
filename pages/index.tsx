@@ -11,7 +11,7 @@ import Logo from "assets/logo.svg";
 import { ClipboardIcon } from "components/clipboard-icon";
 import { copyToClipboard } from "utils/clipboard";
 import { getRandomIcon } from "utils/get-random-icon";
-import { persistEmoji, getStoredEmoji } from "utils/storage";
+import { persistEmoji, getStoredEmoji, Emoji } from "utils/storage";
 
 import styles from "styles/Home.module.css";
 
@@ -19,7 +19,7 @@ const Home: NextPage = () => {
   const { setTheme } = useNextTheme();
   const { isDark } = useTheme();
 
-  const [currentIcon, setCurrentIcon] = useState("");
+  const [currentEmoji, setCurrentEmoji] = useState<Emoji | null>();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const onModalClick = useCallback(() => {
@@ -30,25 +30,46 @@ const Home: NextPage = () => {
     setTheme(isDark ? "light" : "dark");
   }, [isDark, setTheme]);
 
-  const onGenerateClick = useCallback(() => {
-    if (!currentIcon) {
-      const icon = getRandomIcon();
-      setCurrentIcon(icon);
-      persistEmoji(icon);
+  const onCopyToClipboard = useCallback(() => {
+    if (currentEmoji) {
+      copyToClipboard(currentEmoji.icon);
+      toast.success("Copied to your clipboard");
+    }
+  }, [currentEmoji]);
 
-      copyToClipboard(icon);
-    } else {
-      copyToClipboard(currentIcon);
+  const onGenerateClick = useCallback(() => {
+    const currentDate = new Date();
+    const currentDay = currentDate.getDate();
+    const currentMonth = currentDate.getMonth();
+
+    if (currentEmoji) {
+      const storedDate = new Date(currentEmoji.date);
+      const storedDay = storedDate.getDate();
+      const storedMonth = storedDate.getMonth();
+
+      if (storedDay === currentDay && storedMonth === currentMonth) {
+        toast("You already generated an emoji today!", {
+          icon: "😑",
+        });
+
+        return;
+      }
     }
 
-    toast.success("Copied to your clipboard");
-  }, [currentIcon]);
+    const icon = getRandomIcon();
+    const emoji = { icon, date: new Date() };
+
+    setCurrentEmoji(emoji);
+    persistEmoji(emoji);
+
+    onCopyToClipboard();
+  }, [currentEmoji, onCopyToClipboard]);
 
   useEffect(() => {
     const persistedEmoji = getStoredEmoji();
 
     if (persistedEmoji) {
-      setCurrentIcon(persistedEmoji);
+      setCurrentEmoji(persistedEmoji);
     }
   }, []);
 
@@ -96,9 +117,9 @@ const Home: NextPage = () => {
             rounded
             onPress={onGenerateClick}
           >
-            {currentIcon ? currentIcon : "Generate icon"}
+            {currentEmoji ? currentEmoji.icon : "Generate icon"}
           </Button>
-          {currentIcon && (
+          {currentEmoji && (
             <Button
               light
               icon={<ClipboardIcon />}
@@ -106,7 +127,7 @@ const Home: NextPage = () => {
                 color: "#6D6D6D",
                 minWidth: "15rem",
               }}
-              onClick={onGenerateClick}
+              onClick={onCopyToClipboard}
             >
               Copy to clipboard
             </Button>
