@@ -8,6 +8,7 @@ import { useTheme as useNextTheme } from "next-themes";
 import toast from "react-hot-toast";
 
 import Logo from "assets/logo.svg";
+import { ClipboardIcon } from "components/clipboard-icon";
 import { copyToClipboard } from "utils/clipboard";
 import { getRandomIcon } from "utils/get-random-icon";
 import { persistEmoji, getStoredEmoji } from "utils/storage";
@@ -97,6 +98,38 @@ const Home: NextPage = () => {
           >
             {currentIcon ? currentIcon : "Generate icon"}
           </Button>
+          {currentIcon && (
+            <Button
+              light
+              icon={<ClipboardIcon />}
+              css={{
+                color: "#6D6D6D",
+                minWidth: "15rem",
+              }}
+              onClick={onGenerateClick}
+            >
+              Copy to clipboard
+            </Button>
+          )}
+          <div className={styles["info-container"]}>
+            <Link href="https://www.instagram.com/usethisicon/" passHref>
+              <a target="_blank" rel="noopener noreferrer">
+                <Text weight="medium">
+                  Take a screenshot and share with us
+                  <Text
+                    size="1.25rem"
+                    css={{
+                      textGradient:
+                        "90deg, #4F5BD5 39.66%, #962FBF 52.03%, #D62976 65.56%, #FA7E1E 75.11%, #FEDA75 90.6%",
+                    }}
+                  >
+                    @usethisicon
+                  </Text>
+                </Text>
+              </a>
+            </Link>
+            <Text size="1rem">Give a chance to this icon</Text>
+          </div>
         </div>
         <footer className={styles.footer}>
           <Text size="1rem" weight="medium">
@@ -125,8 +158,10 @@ const Home: NextPage = () => {
           </Text>
           <Text span>
             ❤️ Take an screenshot and share it with us at our instagram&nbsp;
-            <Link href="https://www.instagram.com/usethisicon/">
-              @UseThisIcon
+            <Link href="https://www.instagram.com/usethisicon/" passHref>
+              <a target="_blank" rel="noopener noreferrer">
+                @UseThisIcon
+              </a>
             </Link>
           </Text>
         </Modal.Body>
